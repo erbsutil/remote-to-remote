@@ -8,6 +8,8 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import TextField from "@material-ui/core/TextField";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -40,6 +42,11 @@ const useStyles = makeStyles((theme) => ({
 
 const cards = [1, 2, 3];
 
+const places = [
+  { cidade: "Francisco Beltrão", estado: "PR" },
+  { cidade: "Pato Branco", estado: "PR" },
+];
+
 export default function Album() {
   const classes = useStyles();
 
@@ -64,14 +71,22 @@ export default function Album() {
             >
               Title
             </Typography>
-            <Typography
-              variant="p"
-              align="center"
-              color="textSecondary"
-              paragraph
-            >
-              Search here
-            </Typography>
+            <div>
+              <Autocomplete
+                freeSolo
+                disableClearable
+                options={places.map((option) => option.cidade)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Search place"
+                    margin="normal"
+                    variant="outlined"
+                    InputProps={{ ...params.InputProps, type: "search" }}
+                  />
+                )}
+              />
+            </div>
           </Container>
         </div>
         <Container className={classes.cardGrid} maxWidth="md">
