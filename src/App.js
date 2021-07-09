@@ -10,13 +10,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-
-const cards = [1, 2, 3];
-
-const places = [
-  { cidade: "Francisco Beltrão", estado: "PR" },
-  { cidade: "Pato Branco", estado: "PR" },
-];
+import firebase from "./Firebase";
 
 const useStyles = (theme) => ({
   toolbar: {
@@ -48,6 +42,34 @@ const useStyles = (theme) => ({
 });
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.ref = firebase.firestore().collection("enderecos");
+    this.unsubscribe = null;
+    this.state = {
+      boards: [],
+    };
+  }
+
+  onCollectionUpdate = (querySnapshot) => {
+    const boards = [];
+    querySnapshot.forEach((doc) => {
+      const { cidade } = doc.data();
+      boards.push({
+        key: doc.id,
+        doc, // DocumentSnapshot
+        cidade,
+      });
+    });
+    this.setState({
+      boards,
+    });
+  };
+
+  componentDidMount() {
+    this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -75,7 +97,7 @@ class App extends React.Component {
                 <Autocomplete
                   freeSolo
                   disableClearable
-                  options={places.map((option) => option.cidade)}
+                  options={this.state.boards.map((option) => option.cidade)}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -91,8 +113,8 @@ class App extends React.Component {
           </div>
           <Container className={classes.cardGrid} maxWidth="md">
             <Grid container spacing={4}>
-              {cards.map((card) => (
-                <Grid item key={card} xs={12} sm={6} md={4}>
+              {this.state.boards.map((board) => (
+                <Grid item key={board} xs={12} sm={6} md={4}>
                   <Card className={classes.card}>
                     <CardMedia
                       className={classes.cardMedia}
@@ -101,11 +123,7 @@ class App extends React.Component {
                     />
                     <CardContent className={classes.cardContent}>
                       <Typography gutterBottom variant="h5" component="h2">
-                        Heading
-                      </Typography>
-                      <Typography>
-                        This is a media card. You can use this section to
-                        describe the content.
+                        {board.cidade}
                       </Typography>
                     </CardContent>
                   </Card>
