@@ -6,12 +6,19 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Grid from "@material-ui/core/Grid";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
-const useStyles = makeStyles((theme) => ({
+const cards = [1, 2, 3];
+
+const places = [
+  { cidade: "Francisco Beltrão", estado: "PR" },
+  { cidade: "Pato Branco", estado: "PR" },
+];
+
+const useStyles = (theme) => ({
   toolbar: {
     backgroundColor: theme.palette.background.paper,
   },
@@ -38,87 +45,83 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6),
   },
-}));
+});
 
-const cards = [1, 2, 3];
-
-const places = [
-  { cidade: "Francisco Beltrão", estado: "PR" },
-  { cidade: "Pato Branco", estado: "PR" },
-];
-
-export default function Album() {
-  const classes = useStyles();
-
-  return (
-    <React.Fragment>
-      <AppBar elevation={0} position="relative">
-        <Toolbar className={classes.toolbar}>
-          <Typography variant="h6" color="primary" noWrap>
-            Remote to Remote
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <main>
-        <div className={classes.heroContent}>
-          <Container maxWidth="sm">
-            <Typography
-              component="h1"
-              variant="h2"
-              align="center"
-              color="textPrimary"
-              gutterBottom
-            >
-              Title
+class App extends React.Component {
+  render() {
+    const { classes } = this.props;
+    return (
+      <React.Fragment>
+        <AppBar elevation={0} position="relative">
+          <Toolbar className={classes.toolbar}>
+            <Typography variant="h6" color="primary" noWrap>
+              Remote to Remote
             </Typography>
-            <div>
-              <Autocomplete
-                freeSolo
-                disableClearable
-                options={places.map((option) => option.cidade)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Search place"
-                    margin="normal"
-                    variant="outlined"
-                    InputProps={{ ...params.InputProps, type: "search" }}
-                  />
-                )}
-              />
-            </div>
+          </Toolbar>
+        </AppBar>
+        <main>
+          <div className={classes.heroContent}>
+            <Container maxWidth="sm">
+              <Typography
+                component="h1"
+                variant="h2"
+                align="center"
+                color="textPrimary"
+                gutterBottom
+              >
+                Title
+              </Typography>
+              <div>
+                <Autocomplete
+                  freeSolo
+                  disableClearable
+                  options={places.map((option) => option.cidade)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Search place"
+                      margin="normal"
+                      variant="outlined"
+                      InputProps={{ ...params.InputProps, type: "search" }}
+                    />
+                  )}
+                />
+              </div>
+            </Container>
+          </div>
+          <Container className={classes.cardGrid} maxWidth="md">
+            <Grid container spacing={4}>
+              {cards.map((card) => (
+                <Grid item key={card} xs={12} sm={6} md={4}>
+                  <Card className={classes.card}>
+                    <CardMedia
+                      className={classes.cardMedia}
+                      image="https://source.unsplash.com/random"
+                      title="Image title"
+                    />
+                    <CardContent className={classes.cardContent}>
+                      <Typography gutterBottom variant="h5" component="h2">
+                        Heading
+                      </Typography>
+                      <Typography>
+                        This is a media card. You can use this section to
+                        describe the content.
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
           </Container>
-        </div>
-        <Container className={classes.cardGrid} maxWidth="md">
-          <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
-                <Card className={classes.card}>
-                  <CardMedia
-                    className={classes.cardMedia}
-                    image="https://source.unsplash.com/random"
-                    title="Image title"
-                  />
-                  <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      Heading
-                    </Typography>
-                    <Typography>
-                      This is a media card. You can use this section to describe
-                      the content.
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </main>
-      <footer className={classes.footer}>
-        <Typography variant="h6" align="center" gutterBottom>
-          Footer
-        </Typography>
-      </footer>
-    </React.Fragment>
-  );
+        </main>
+        <footer className={classes.footer}>
+          <Typography variant="h6" align="center" gutterBottom>
+            Footer
+          </Typography>
+        </footer>
+      </React.Fragment>
+    );
+  }
 }
+
+export default withStyles(useStyles)(App);
