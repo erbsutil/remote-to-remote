@@ -1,10 +1,8 @@
-import firebase from "firebase/app";
+import firebase from "firebase";
 
 const { REACT_APP_KEY, REACT_APP_NAME, REACT_APP_ID } = process.env;
 
-const settings = { timestampsInSnapshots: true };
-
-const config = {
+const firebaseConfig = {
   apiKey: REACT_APP_KEY,
   authDomain: REACT_APP_NAME + ".firebaseapp.com",
   projectId: REACT_APP_NAME,
@@ -14,7 +12,8 @@ const config = {
   measurementId: "G-Z314MNEHDX",
 };
 
-firebase.initializeApp(config);
-firebase.firestore().settings(settings);
+firebase.initializeApp(firebaseConfig);
 
-export default firebase;
+const db = firebase.firestore();
+
+export default db;
