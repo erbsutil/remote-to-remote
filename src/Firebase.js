@@ -1,4 +1,6 @@
-import firebase from "firebase";
+import firebase from "firebase/app";
+
+import "firebase/firestore";
 
 const { REACT_APP_KEY, REACT_APP_NAME, REACT_APP_ID } = process.env;
 
@@ -14,6 +16,4 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-const DB = firebase.firestore();
-
-export default DB;
+export default firebase;

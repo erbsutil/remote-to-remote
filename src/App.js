@@ -12,31 +12,51 @@ import {
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import CustomMaterial from "./Material";
-import DB from "./Firebase";
+import firebase from "./Firebase";
+
+const usePlaces = () => {
+  const [places, setPlaces] = useState([]);
+
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection("enderecos")
+      .onSnapshot((snapshot) => {
+        const places = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        setPlaces(places);
+      });
+  }, []);
+
+  return places;
+};
 
 const App = () => {
   const classes = CustomMaterial();
-  
-  const [places, setPlaces] = useState([]);
+  const places = usePlaces();
 
-  const fetchPlaces = async () => {
-    const response = DB.collection("enderecos");
-    const data = await response.get();
-    data.docs.forEach((item) => {
-      setPlaces([...places, item.data()]);
-    });
-  };
+  // const setNewPlace = async () => {
+  //   const citiesRef = DB.collection("enderecos");
+  //   const data = await citiesRef.doc("SF").set({
+  //     cep: "123",
+  //     cidade: "Pato",
+  //     estado: "PR",
+  //     numero: "123",
+  //     rua: "nome da rua",
+  //   });
 
-  useEffect(() => {
-    fetchPlaces();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  //   console.log(data);
+  // };
 
   return (
     <React.Fragment>
       <AppBar elevation={0} position="relative">
         <Toolbar className={classes.toolbar}>
           <Typography variant="h6" color="primary" noWrap>
-            Remote to Remote
+            Onde trabalhar remoto
           </Typography>
         </Toolbar>
       </AppBar>
@@ -47,10 +67,18 @@ const App = () => {
               component="h1"
               variant="h2"
               align="center"
-              color="textPrimary"
+              color="text.primary"
               gutterBottom
             >
-              Title
+              Onde trabalhar remoto
+            </Typography>
+            <Typography
+              variant="h5"
+              align="center"
+              color="text.secondary"
+              paragraph
+            >
+              Encontre ou recomende locais e estabelecimentos agradáveis
             </Typography>
             <div>
               <Autocomplete
