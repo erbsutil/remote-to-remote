@@ -6,7 +6,7 @@ import App from "./App";
 import CreatePlace from "./CreatePlace";
 
 ReactDOM.render(
-  <Router>
+  <Router basename={process.env.PUBLIC_URL}>
     <div>
       <Route exact path="/" component={App} />
       <Route exact path="/novo" component={CreatePlace} />
