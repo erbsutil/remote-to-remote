@@ -1,6 +1,5 @@
-import firebase from "firebase/app";
-
-import "firebase/firestore";
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore"
 
 const { REACT_APP_KEY, REACT_APP_NAME, REACT_APP_ID } = process.env;
 
@@ -14,6 +13,7 @@ const firebaseConfig = {
   measurementId: "G-Z314MNEHDX",
 };
 
-firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-export default firebase;
+export {db}
